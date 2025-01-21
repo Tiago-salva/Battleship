@@ -70,6 +70,7 @@ export default class Gameboard {
     if (this.board[row][col] === 1) {
       const hittedShip = this.getShipAtCoordinates(row, col);
       this.board[row][col] = "X";
+      hittedShip.hit();
       hittedShip.isSunk();
     } else {
       this.missedAttacks.push(coordinates);
@@ -78,5 +79,17 @@ export default class Gameboard {
   }
 
   // Debe de verificar si todos los barcon han sido hundidos
-  allShipsSunk() {}
+  allShipsSunk() {
+    const checkedShips = new Set();
+
+    for (const ship of this.ships.values()) {
+      if (checkedShips.has(ship)) continue;
+
+      if (!ship.isSunk()) return false;
+
+      checkedShips.add(ship);
+    }
+
+    return true;
+  }
 }
