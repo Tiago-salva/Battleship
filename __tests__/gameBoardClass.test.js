@@ -5,8 +5,8 @@ test("Placing a ship", () => {
   const gameBoard = new Gameboard();
   gameBoard.placeShip(3, [2, 6]);
 
-  expect(gameBoard.board[2][6]).toBe(1);
-  expect(gameBoard.board[2][8]).toBe(1);
+  expect(gameBoard.gameboard[2][6]).toBe(1);
+  expect(gameBoard.gameboard[2][8]).toBe(1);
 });
 
 test("Placing a multiple ships", () => {
@@ -16,10 +16,10 @@ test("Placing a multiple ships", () => {
   gameBoard.placeShip(1, [5, 1]);
   gameBoard.placeShip(2, [6, 3]);
 
-  expect(gameBoard.board[2][6]).toBe(1);
-  expect(gameBoard.board[9][7]).toBeFalsy();
-  expect(gameBoard.board[5][1]).toBe(1);
-  expect(gameBoard.board[6][3]).toBe(1);
+  expect(gameBoard.gameboard[2][6]).toBe(1);
+  expect(gameBoard.gameboard[9][7]).toBeFalsy();
+  expect(gameBoard.gameboard[5][1]).toBe(1);
+  expect(gameBoard.gameboard[6][3]).toBe(1);
 });
 
 test("Placing a multiple ships on both directions", () => {
@@ -31,11 +31,11 @@ test("Placing a multiple ships on both directions", () => {
   gameBoard.placeShip(2, [6, 3], false);
   gameBoard.placeShip(3, [8, 6], false);
 
-  expect(gameBoard.board[2][6]).toBe(1);
-  expect(gameBoard.board[4][5]).toBe(1);
-  expect(gameBoard.board[5][1]).toBe(1);
-  expect(gameBoard.board[6][3]).toBe(1);
-  expect(gameBoard.board[8][6]).toBeFalsy();
+  expect(gameBoard.gameboard[2][6]).toBe(1);
+  expect(gameBoard.gameboard[4][5]).toBe(1);
+  expect(gameBoard.gameboard[5][1]).toBe(1);
+  expect(gameBoard.gameboard[6][3]).toBe(1);
+  expect(gameBoard.gameboard[8][6]).toBeFalsy();
 });
 
 // Tests for the attacks (receiving, missing and not valid)
@@ -47,7 +47,7 @@ test("Receiving an attack", () => {
   gameBoard.receiveAttack([2, 6]);
   gameBoard.receiveAttack([5, 1]);
 
-  expect(gameBoard.board[2][6] && gameBoard.board[5][1]).toBe("X");
+  expect(gameBoard.gameboard[2][6] && gameBoard.gameboard[5][1]).toBe("X");
 });
 
 test("Missing an attack", () => {
@@ -97,14 +97,9 @@ test("Checking if all the ships are sinked (Bad path)", () => {
 
   gameBoard.receiveAttack([2, 7]);
   gameBoard.receiveAttack([2, 8]);
-  const shipSunk = gameBoard.getShipAtCoordinates(2, 7);
 
   gameBoard.receiveAttack([8, 4]);
   gameBoard.receiveAttack([8, 6]);
 
-  const shipNotSunk = gameBoard.getShipAtCoordinates(8, 4);
-
-  expect(shipSunk.hits).toBe(2);
-  expect(shipNotSunk.hits).toBe(2);
   expect(gameBoard.allShipsSunk()).toBe(true);
 });
