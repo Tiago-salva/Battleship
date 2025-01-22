@@ -2,7 +2,7 @@ import Ship from "./shipClass.js";
 
 export default class Gameboard {
   constructor() {
-    this.board = Array(10)
+    this.gameboard = Array(10)
       .fill()
       .map(() => Array(10).fill(0));
 
@@ -21,18 +21,18 @@ export default class Gameboard {
     // Si las coorrdenadas sobresalen del tablero, devuelve false
     if (
       row < 0 ||
-      row >= this.board.length ||
+      row >= this.gameboard.length ||
       col < 0 ||
-      col >= this.board.length
+      col >= this.gameboard.length
     ) {
       return false;
     }
 
-    // Si el final del barco sobresale del board, devuelve false
-    if (isHorizontal && col + length > this.board[0].length) {
+    // Si el final del barco sobresale del gameboard, devuelve false
+    if (isHorizontal && col + length > this.gameboard[0].length) {
       return false;
     }
-    if (!isHorizontal && row + length > this.board.length) {
+    if (!isHorizontal && row + length > this.gameboard.length) {
       return false;
     }
 
@@ -40,7 +40,7 @@ export default class Gameboard {
 
     for (let i = 0; i < ship.length; i++) {
       this.ships.set(`${row},${col}`, ship);
-      this.board[row][col] = 1;
+      this.gameboard[row][col] = 1;
       ship.position.push([row, col]);
 
       if (isHorizontal) {
@@ -60,21 +60,21 @@ export default class Gameboard {
 
     if (
       row < 0 ||
-      row >= this.board.length ||
+      row >= this.gameboard.length ||
       col < 0 ||
-      col >= this.board.length
+      col >= this.gameboard.length
     ) {
       return false;
     }
 
-    if (this.board[row][col] === 1) {
+    if (this.gameboard[row][col] === 1) {
       const hittedShip = this.getShipAtCoordinates(row, col);
-      this.board[row][col] = "X";
+      this.gameboard[row][col] = "X";
       hittedShip.hit();
       hittedShip.isSunk();
     } else {
       this.missedAttacks.push(coordinates);
-      this.board[row][col] = "O";
+      this.gameboard[row][col] = "O";
     }
   }
 
