@@ -10,6 +10,20 @@ body {
     display: flex;
 }
 
+.game-turn {
+    width: 150px;
+    height: 50px;
+    background-color: chartreuse;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
 .gameboard-computer-container,
 .gameboard-human-container {
     margin: auto;
@@ -29,4 +43,12 @@ body {
     background-color: burlywood;
     border: 1px solid black;
     cursor: pointer;
+}
+
+.cell-empty {
+    background-color: blue;
+}
+
+.cell-full {
+    background-color: crimson;
 }
