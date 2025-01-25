@@ -15,10 +15,10 @@ export default class Gameboard {
     return this.ships.get(`${row},${col}`) || null;
   }
 
-  // Recibe las coordenadas y luego crea un ship llamando a la clase shipClass
+  // Receive the coordinates, and then creates a ship, calling the clase shipClass
   placeShip(length, coordinates, isHorizontal = true) {
     let [row, col] = coordinates;
-    // Si las coorrdenadas sobresalen del tablero, devuelve false
+    // If the coordinates stick out from the board, return false
     if (
       row < 0 ||
       row >= this.gameboard.length ||
@@ -28,7 +28,7 @@ export default class Gameboard {
       return false;
     }
 
-    // Si el final del barco sobresale del gameboard, devuelve false
+    // If all the ship stick out from the gameboard, return false
     if (isHorizontal && col + length > this.gameboard[0].length) {
       return false;
     }
@@ -52,9 +52,6 @@ export default class Gameboard {
     return true;
   }
 
-  // Recibe coordenadas y se fija si en esas coordenadas hay algun barco,
-  // De ser asi llama a la funcion hit del barco
-  // De lo contrario, almacena las coordenadas en missedAttacks
   receiveAttack(coordinates) {
     const [row, col] = coordinates;
 
@@ -67,6 +64,7 @@ export default class Gameboard {
       return false;
     }
 
+    // If there's a ship, then attack
     if (this.gameboard[row][col] === 1) {
       const hittedShip = this.getShipAtCoordinates(row, col);
       this.gameboard[row][col] = "X";
@@ -78,7 +76,6 @@ export default class Gameboard {
     }
   }
 
-  // Debe de verificar si todos los barcon han sido hundidos
   allShipsSunk() {
     const checkedShips = new Set();
 
