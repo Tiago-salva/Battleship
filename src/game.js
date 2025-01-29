@@ -13,26 +13,44 @@ function battleShipGame() {
 
   function handleHumanClick(cellDiv, opponent) {
     const coordinates = cellDiv.dataset.coordinates.split(",").map(Number);
-    humanPlayer.attack(opponent, coordinates);
-    renderBoard(opponent, handleHumanClick);
-
-    if (checkWinner(humanPlayer, opponent)) {
-      console.log(`Ganaste ${winner}!`);
-      setTimeout(() => {
-        resetGame();
-      }, 1000);
+    const [row, col] = coordinates;
+    if (humanPlayer.attack(opponent, coordinates) === false) {
+      console.log("El ataque no es valido, intenta de nuevo");
       return;
     }
+
+    // Si se ataco a un barco, el jugador vuelve a atacar
+    humanPlayer.attack(opponent, coordinates);
+    if (opponent.playerGameboard.gameboard[row][col] === "X") {
+      console.log("le diste a un barco");
+      renderBoard(opponent, handleHumanClick);
+      if (checkWinner(humanPlayer, opponent)) {
+        console.log(`Ganaste ${winner}!`);
+        setTimeout(() => {
+          resetGame();
+        }, 1000);
+        return;
+      }
+      return;
+    }
+
+    renderBoard(opponent, handleHumanClick);
 
     gameTurn = computerPlayer;
     gameTurnText.textContent = gameTurn.name;
     setTimeout(() => {
       computerTurn();
-    }, 1000);
+    }, 1500);
   }
 
   function computerTurn() {
-    computerPlayer.attack(humanPlayer);
+    let validAttack = computerPlayer.attack(humanPlayer);
+
+    while (validAttack === false) {
+      console.log("El ataque no es valido");
+      validAttack = computerPlayer.attack(humanPlayer);
+    }
+
     renderBoard(humanPlayer, handleHumanClick);
 
     if (checkWinner(computerPlayer, humanPlayer)) {
@@ -61,10 +79,42 @@ function battleShipGame() {
   let gameTurn = humanPlayer;
   gameTurnText.textContent = gameTurn.name;
 
-  humanPlayer.playerGameboard.placeShip(2, [2, 6]);
-  computerPlayer.playerGameboard.placeShip(2, [5, 1], false);
+  humanPlayer.playerGameboard.placeShip(2, [5, 1]);
+  humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
+  humanPlayer.playerGameboard.placeShip(4, [1, 8], false);
+  humanPlayer.playerGameboard.placeShip(2, [7, 2]);
+  // humanPlayer.playerGameboard.placeShip(2, [2, 6]);
+  // computerPlayer.playerGameboard.placeShip(2, [5, 1], false);
 
-  renderBoard(humanPlayer, handleHumanClick);
+  function placeRandomShip(length, isHorizontal = true) {
+    let placed = false;
+
+    while (!placed) {
+      // Generar coordenadas aleatorias
+      const row = Math.floor(
+        Math.random() * computerPlayer.playerGameboard.gameboard.length
+      );
+      const col = Math.floor(
+        Math.random() * computerPlayer.playerGameboard.gameboard[0].length
+      );
+
+      // Intentar colocar el barco
+      placed = computerPlayer.playerGameboard.placeShip(
+        length,
+        [row, col],
+        isHorizontal
+      );
+    }
+  }
+
+  for (let i = 0; i < 5; i++) {
+    const randomLength = Math.floor(Math.random() * (4 - 1) + 1);
+    placeRandomShip(randomLength);
+  }
+
+  console.log(humanPlayer.playerGameboard.gameboard);
+
+  renderBoard(humanPlayer);
   renderBoard(computerPlayer, handleHumanClick);
 }
 
