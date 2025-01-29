@@ -15,6 +15,14 @@ export default class Player {
       const randomCol = Math.floor(
         Math.random() * opponent.playerGameboard.gameboard[0].length
       );
+
+      if (
+        opponent.playerGameboard.gameboard[randomRow][randomCol] === "X" ||
+        opponent.playerGameboard.gameboard[randomRow][randomCol] === "O"
+      ) {
+        return false;
+      }
+
       return opponent.playerGameboard.receiveAttack([randomRow, randomCol]);
     }
 
