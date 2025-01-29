@@ -11,13 +11,12 @@ export default function renderBoard(player, handleClick) {
     row.forEach((cell, colIndex) => {
       const cellDiv = document.createElement("div");
       cellDiv.classList.add("cell");
-      cellDiv.textContent = cell;
+      cellDiv.textContent = "";
       // Solo es estetico, removerlo mas tarde
-
-      if (cellDiv.textContent === "O") {
+      if (player.playerGameboard.gameboard[rowIndex][colIndex] === "O") {
         cellDiv.classList.add("cell-empty");
       }
-      if (cellDiv.textContent === "X") {
+      if (player.playerGameboard.gameboard[rowIndex][colIndex] === "X") {
         cellDiv.classList.add("cell-full");
       }
 
