@@ -37,7 +37,7 @@ function battleShipGame() {
     renderBoard(opponent, handleHumanClick);
 
     gameTurn = computerPlayer;
-    gameTurnText.textContent = gameTurn.name;
+    gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
     setTimeout(() => {
       computerTurn();
     }, 1500);
@@ -59,7 +59,7 @@ function battleShipGame() {
     }
 
     gameTurn = humanPlayer;
-    gameTurnText.textContent = gameTurn.name;
+    gameTurnText.textContent = `The ${gameTurn.name} it's calcualting the attack`;
   }
 
   function resetGame() {
@@ -72,12 +72,12 @@ function battleShipGame() {
     battleShipGame();
   }
 
-  const humanPlayer = new Player("Valentin", "human");
-  const computerPlayer = new Player("Gustavo", "computer");
+  const humanPlayer = new Player("Jugador", "human");
+  const computerPlayer = new Player("Computadora", "computer");
   const gameTurnText = document.querySelector(".game-turn");
   let winner = null;
   let gameTurn = humanPlayer;
-  gameTurnText.textContent = gameTurn.name;
+  gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
 
   humanPlayer.playerGameboard.placeShip(2, [5, 1]);
   humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
