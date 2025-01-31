@@ -71,14 +71,16 @@ export default class Gameboard {
       hittedShip.hit();
       // En un futuro agregar que las casillas se muestren distinto
       if (hittedShip.isSunk()) {
-        console.log("Barco derribado");
+        console.log(hittedShip.position);
+        hittedShip.position.forEach((position) => {
+          const [row, col] = position;
+          this.gameboard[row][col] = "#";
+        });
       }
-      console.log(this.gameboard);
       return true;
     } else if (this.gameboard[row][col] === 0) {
       this.missedAttacks.push(coordinates);
       this.gameboard[row][col] = "O";
-      console.log(this.gameboard);
       return;
     }
     return false;
