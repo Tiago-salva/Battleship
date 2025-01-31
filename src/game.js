@@ -21,7 +21,10 @@ function battleShipGame() {
 
     // Si se ataco a un barco, el jugador vuelve a atacar
     humanPlayer.attack(opponent, coordinates);
-    if (opponent.playerGameboard.gameboard[row][col] === "X") {
+    if (
+      opponent.playerGameboard.gameboard[row][col] === "X" ||
+      opponent.playerGameboard.gameboard[row][col] === "#"
+    ) {
       gameTurnText.textContent = "You hit a ship! Attack again";
       renderBoard(opponent, handleHumanClick);
       console.log("hola");
