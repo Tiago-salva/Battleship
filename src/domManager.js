@@ -2,8 +2,8 @@ export default function renderBoard(player, handleClick) {
   // Depending of the type of the player, it will select a different board container
   const gameboardContainer =
     player.type == "computer"
-      ? document.querySelector(".gameboard-computer-container")
-      : document.querySelector(".gameboard-human-container");
+      ? document.querySelector(".gameboard-computer")
+      : document.querySelector(".gameboard-human");
 
   gameboardContainer.innerHTML = "";
 
@@ -18,6 +18,10 @@ export default function renderBoard(player, handleClick) {
       }
       if (player.playerGameboard.gameboard[rowIndex][colIndex] === "X") {
         cellDiv.classList.add("cell-full");
+      }
+      if (player.playerGameboard.gameboard[rowIndex][colIndex] === "#") {
+        cellDiv.classList.add("cell-sunk");
+        cellDiv.textContent = "X";
       }
 
       cellDiv.dataset.coordinates = `${rowIndex},${colIndex}`;
