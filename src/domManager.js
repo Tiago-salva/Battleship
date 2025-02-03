@@ -1,4 +1,4 @@
-export default function renderBoard(player, handleClick) {
+export default function renderBoard(player, handleClick = null) {
   // Depending of the type of the player, it will select a different board container
   const gameboardContainer =
     player.type == "computer"
@@ -10,20 +10,34 @@ export default function renderBoard(player, handleClick) {
   player.playerGameboard.gameboard.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       const cellDiv = document.createElement("div");
-      cellDiv.classList.add("cell");
       cellDiv.textContent = "";
-      // Solo es estetico, removerlo mas tarde
+
+      if (player.type === "computer") {
+        cellDiv.classList.add("cell-computer");
+      } else {
+        cellDiv.classList.add("cell-human");
+      }
+      // if (
+      //   player.type === "human" &&
+      //   player.playerGameboard.gameboard[rowIndex][colIndex] === 1
+      // ) {
+      //   cellDiv.style.border = "1px solid red";
+      // }
+
       if (player.playerGameboard.gameboard[rowIndex][colIndex] === "O") {
         cellDiv.classList.add("cell-empty");
       }
+
       if (player.playerGameboard.gameboard[rowIndex][colIndex] === "X") {
         cellDiv.classList.add("cell-full");
       }
+
       if (player.playerGameboard.gameboard[rowIndex][colIndex] === "#") {
         cellDiv.classList.add("cell-sunk");
         cellDiv.textContent = "X";
       }
 
+      cellDiv.dataset.index = rowIndex * 10 + colIndex;
       cellDiv.dataset.coordinates = `${rowIndex},${colIndex}`;
       gameboardContainer.appendChild(cellDiv);
       if (player.type === "computer")
