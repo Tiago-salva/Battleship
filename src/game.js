@@ -2,6 +2,29 @@ import Player from "./playerClass.js";
 import renderBoard from "./domManager.js";
 
 function battleShipGame() {
+  const shipLength = 3;
+  const board = document.querySelector(".gameboard-human");
+  let isVertical = false;
+
+  function highlightCells(startIndex, length, vertical, size) {
+    for (let i = 0; i < length; i++) {
+      let index = vertical ? startIndex + i * size : startIndex + i;
+      let cell = board.children[index];
+
+      cell.classList.add("cell-highlight");
+    }
+  }
+
+  function clearHighlights() {
+    document
+      .querySelectorAll(".cell-highlight, .cell-invalid")
+      .forEach((cell) => {
+        cell.classList.remove("cell-highlight", "cell-invalid");
+      });
+  }
+
+  //
+
   function checkWinner(currentPlayer, opponent) {
     if (opponent.playerGameboard.allShipsSunk() === true) {
       winner = currentPlayer.name;
@@ -27,9 +50,7 @@ function battleShipGame() {
     ) {
       gameTurnText.textContent = "You hit a ship! Attack again";
       renderBoard(opponent, handleHumanClick);
-      console.log("hola");
       if (checkWinner(humanPlayer, opponent)) {
-        console.log("hola1");
         gameTurnText.textContent = `You won: ${winner}!`;
         setTimeout(() => {
           resetGame();
@@ -59,7 +80,7 @@ function battleShipGame() {
       validAttack = computerPlayer.attack(humanPlayer);
     }
 
-    renderBoard(humanPlayer, handleHumanClick);
+    renderBoard(humanPlayer);
 
     if (checkWinner(computerPlayer, humanPlayer)) {
       gameTurnText.textContent = "Oh no! The computer won";
@@ -88,12 +109,11 @@ function battleShipGame() {
   let gameTurn = humanPlayer;
   gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
 
+  // Aca s eva a llamar la funcion para poner los barcos
   humanPlayer.playerGameboard.placeShip(2, [5, 1]);
   humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
   humanPlayer.playerGameboard.placeShip(4, [1, 8], false);
   humanPlayer.playerGameboard.placeShip(2, [7, 2]);
-  // humanPlayer.playerGameboard.placeShip(2, [2, 6]);
-  // computerPlayer.playerGameboard.placeShip(2, [5, 1], false);
 
   function placeRandomShip(length, isHorizontal = true) {
     let placed = false;
@@ -125,6 +145,28 @@ function battleShipGame() {
 
   renderBoard(humanPlayer);
   renderBoard(computerPlayer, handleHumanClick);
+
+  board.addEventListener("mouseleave", clearHighlights);
+
+  board.querySelectorAll(".cell-human").forEach((cell) => {
+    cell.addEventListener("mousemove", () => {
+      clearHighlights();
+      const boardSize = 10;
+      const index = parseInt(cell.dataset.index);
+      const row = Math.floor(index / boardSize);
+      const col = index % boardSize;
+
+      let isValidPosition = isVertical
+        ? row + shipLength <= boardSize // Verifica el borde inferior
+        : col + shipLength <= boardSize; // Verifica el borde derecho
+
+      if (isValidPosition) {
+        highlightCells(index, shipLength, isVertical, boardSize);
+      } else {
+        board.children[index].classList.add("cell-invalid");
+      }
+    });
+  });
 }
 
 battleShipGame();
