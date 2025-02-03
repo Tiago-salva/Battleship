@@ -5,7 +5,7 @@
     --black: rgb(2, 21, 38);
     --dark-blue: rgb(3, 52, 110);
     --light-blue: rgba(66, 145, 250, 50%);
-    --light-blue-hover: rgb(85, 157, 252);
+    --light-blue-hover: rgb(127 174 237);
     --blue: rgb(64, 126, 224);
     --red: rgb(231, 99, 99);
     --white: rgb(245, 245, 245);
@@ -64,7 +64,8 @@ body {
     border: 1px solid var(--light-blue);
 }
 
-.cell {
+.cell-computer,
+.cell-human {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,7 +74,7 @@ body {
     cursor: pointer;
 }
 
-.cell:hover {
+.cell-computer:hover {
     background-color: var(--light-blue-hover);
 }
 
@@ -94,4 +95,12 @@ body {
 
 .cell-sunk {
     background-color: var(--red);
+}
+
+.cell-invalid {
+    background-color: red;
+}
+
+.cell-highlight {
+    background-color: var(--light-blue-hover);
 }
