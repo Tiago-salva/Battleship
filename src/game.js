@@ -2,11 +2,63 @@ import Player from "./playerClass.js";
 import renderBoard from "./domManager.js";
 
 function battleShipGame() {
-  const shipLength = 3;
-  const board = document.querySelector(".gameboard-human");
-  let isVertical = false;
+  const lengths = [4, 3, 3, 2];
+  let count = 0;
+  let shipsPlaced = false;
+
+  function handlePlaceShips(cell, player) {
+    const coordinates = cell.dataset.coordinates.split(",").map(Number);
+
+    if (!player.playerGameboard.placeShip(lengths[count], coordinates)) {
+      console.log("Posicion no valida");
+      return;
+    }
+
+    console.log(player.playerGameboard.gameboard);
+    count++;
+    placeShips(player, lengths[count]);
+
+    if (count === 4) {
+      console.log("Todos los barcos fueron ubicados");
+      shipsPlaced = true;
+      return;
+    }
+  }
+
+  function placeShips(player, length) {
+    renderBoard(player, handlePlaceShips);
+    addHighlights(length);
+  }
+
+  function addHighlights(shipLength) {
+    const board = document.querySelector(".gameboard-human");
+    let isVertical = false;
+
+    board.addEventListener("mouseleave", clearHighlights);
+
+    board.querySelectorAll(".cell-human").forEach((cell) => {
+      cell.addEventListener("mousemove", () => {
+        clearHighlights();
+        const boardSize = 10;
+        const index = parseInt(cell.dataset.index);
+        const row = Math.floor(index / boardSize);
+        const col = index % boardSize;
+
+        let isValidPosition = isVertical
+          ? row + shipLength <= boardSize
+          : col + shipLength <= boardSize;
+
+        if (isValidPosition) {
+          highlightCells(index, shipLength, isVertical, boardSize);
+        } else {
+          board.children[index].classList.add("cell-invalid");
+        }
+      });
+    });
+  }
 
   function highlightCells(startIndex, length, vertical, size) {
+    const board = document.querySelector(".gameboard-human");
     for (let i = 0; i < length; i++) {
       let index = vertical ? startIndex + i * size : startIndex + i;
       let cell = board.children[index];
@@ -102,19 +154,6 @@ function battleShipGame() {
     battleShipGame();
   }
 
-  const humanPlayer = new Player("Player", "human");
-  const computerPlayer = new Player("Computer", "computer");
-  const gameTurnText = document.querySelector(".game-turn");
-  let winner = null;
-  let gameTurn = humanPlayer;
-  gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
-
-  // Aca s eva a llamar la funcion para poner los barcos
-  humanPlayer.playerGameboard.placeShip(2, [5, 1]);
-  humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
-  humanPlayer.playerGameboard.placeShip(4, [1, 8], false);
-  humanPlayer.playerGameboard.placeShip(2, [7, 2]);
-
   function placeRandomShip(length, isHorizontal = true) {
     let placed = false;
 
@@ -136,37 +175,31 @@ function battleShipGame() {
     }
   }
 
-  for (let i = 0; i < 4; i++) {
-    const randomLength = Math.floor(Math.random() * (4 - 2) + 2);
-    placeRandomShip(randomLength);
+  const humanPlayer = new Player("Player", "human");
+  const computerPlayer = new Player("Computer", "computer");
+  const gameTurnText = document.querySelector(".game-turn");
+  let winner = null;
+  let gameTurn = humanPlayer;
+  gameTurnText.textContent = `Place your ships: ${gameTurn.name}!`;
+
+  // Aca s eva a llamar la funcion para poner los barcos
+  // humanPlayer.playerGameboard.placeShip(2, [5, 1]);
+  // humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
+  // humanPlayer.playerGameboard.placeShip(4, [1, 8], false);
+  // humanPlayer.playerGameboard.placeShip(2, [7, 2]);
+  placeShips(humanPlayer, lengths[0]);
+
+  if (shipsPlaced) {
+    for (let i = 0; i < 4; i++) {
+      const randomLength = Math.floor(Math.random() * (4 - 2) + 2);
+      placeRandomShip(randomLength);
+    }
+
+    console.log(computerPlayer.playerGameboard.gameboard);
+
+    renderBoard(humanPlayer);
+    renderBoard(computerPlayer, handleHumanClick);
   }
-
-  console.log(computerPlayer.playerGameboard.gameboard);
-
-  renderBoard(humanPlayer);
-  renderBoard(computerPlayer, handleHumanClick);
-
-  board.addEventListener("mouseleave", clearHighlights);
-
-  board.querySelectorAll(".cell-human").forEach((cell) => {
-    cell.addEventListener("mousemove", () => {
-      clearHighlights();
-      const boardSize = 10;
-      const index = parseInt(cell.dataset.index);
-      const row = Math.floor(index / boardSize);
-      const col = index % boardSize;
-
-      let isValidPosition = isVertical
-        ? row + shipLength <= boardSize // Verifica el borde inferior
-        : col + shipLength <= boardSize; // Verifica el borde derecho
-
-      if (isValidPosition) {
-        highlightCells(index, shipLength, isVertical, boardSize);
-      } else {
-        board.children[index].classList.add("cell-invalid");
-      }
-    });
-  });
 }
 
 battleShipGame();
