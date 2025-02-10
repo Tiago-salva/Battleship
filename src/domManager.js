@@ -10,12 +10,13 @@ export default function renderBoard(player, handleClick = null) {
   player.playerGameboard.gameboard.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       const cellDiv = document.createElement("div");
+      cellDiv.classList.add("cell");
       cellDiv.textContent = "";
 
       if (player.type === "computer") {
         cellDiv.classList.add("cell-computer");
         cellDiv.addEventListener("click", () => handleClick(cellDiv, player));
-      } else {
+      } else if (player.type === "human") {
         cellDiv.classList.add("cell-human");
         cellDiv.addEventListener("click", () => handleClick(cellDiv, player));
       }
