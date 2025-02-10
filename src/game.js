@@ -4,11 +4,24 @@ import renderBoard from "./domManager.js";
 function battleShipGame() {
   const lengths = [4, 3, 3, 2];
   let count = 0;
+  let isHorizontal = true;
+
+  const rotateShipBtn = document.querySelector(".rotate-ship-btn");
+  rotateShipBtn.addEventListener("click", () => {
+    isHorizontal = !isHorizontal;
+    console.log(isHorizontal);
+  });
 
   function handlePlaceShips(cell, player) {
     const coordinates = cell.dataset.coordinates.split(",").map(Number);
 
-    if (!player.playerGameboard.placeShip(lengths[count], coordinates)) {
+    if (
+      !player.playerGameboard.placeShip(
+        lengths[count],
+        coordinates,
+        isHorizontal
+      )
+    ) {
       console.log("Posicion no valida");
       return false;
     }
@@ -27,13 +40,11 @@ function battleShipGame() {
     renderBoard(player, handlePlaceShips);
     addHighlights(length);
 
-    console.log(player.playerGameboard.ships.size);
     if (player.playerGameboard.ships.size === 12) return;
   }
 
   function addHighlights(shipLength) {
     const board = document.querySelector(".gameboard-human");
-    let isVertical = false;
 
     board.addEventListener("mouseleave", clearHighlights);
 
@@ -45,12 +56,12 @@ function battleShipGame() {
         const row = Math.floor(index / boardSize);
         const col = index % boardSize;
 
-        let isValidPosition = isVertical
-          ? row + shipLength <= boardSize
-          : col + shipLength <= boardSize;
+        let isValidPosition = isHorizontal
+          ? col + shipLength <= boardSize
+          : row + shipLength <= boardSize;
 
         if (isValidPosition) {
-          highlightCells(index, shipLength, isVertical, boardSize);
+          highlightCells(index, shipLength, isHorizontal, boardSize);
         } else {
           board.children[index].classList.add("cell-invalid");
         }
@@ -61,7 +72,7 @@ function battleShipGame() {
   function highlightCells(startIndex, length, vertical, size) {
     const board = document.querySelector(".gameboard-human");
     for (let i = 0; i < length; i++) {
-      let index = vertical ? startIndex + i * size : startIndex + i;
+      let index = vertical ? startIndex + i : startIndex + i * size;
       let cell = board.children[index];
 
       cell.classList.add("cell-highlight");
