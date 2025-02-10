@@ -40,6 +40,22 @@ body {
     padding: 0 25px;
 }
 
+.rotate-ship-btn {
+    width: 150px;
+    height: 35px;
+    font-family: "Inconsolata", sans-serif;
+    font-size: 1rem;
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: 5px;
+    border: 2px solid var(--light-blue);
+    cursor: pointer;
+}
+
+.rotate-ship-btn:hover {
+    background-color: var(--white-hover);
+}
+
 .gameboards-container {
     display: flex;
     gap: 70px;
@@ -64,8 +80,7 @@ body {
     border: 1px solid var(--light-blue);
 }
 
-.cell-computer,
-.cell-human {
+.cell {
     display: flex;
     justify-content: center;
     align-items: center;
