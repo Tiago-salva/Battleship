@@ -4,14 +4,13 @@ import renderBoard from "./domManager.js";
 function battleShipGame() {
   const lengths = [4, 3, 3, 2];
   let count = 0;
-  let shipsPlaced = false;
 
   function handlePlaceShips(cell, player) {
     const coordinates = cell.dataset.coordinates.split(",").map(Number);
 
     if (!player.playerGameboard.placeShip(lengths[count], coordinates)) {
       console.log("Posicion no valida");
-      return;
+      return false;
     }
 
     console.log(player.playerGameboard.gameboard);
@@ -20,14 +19,16 @@ function battleShipGame() {
 
     if (count === 4) {
       console.log("Todos los barcos fueron ubicados");
-      shipsPlaced = true;
-      return;
+      startGame();
     }
   }
 
   function placeShips(player, length) {
     renderBoard(player, handlePlaceShips);
     addHighlights(length);
+
+    console.log(player.playerGameboard.ships.size);
+    if (player.playerGameboard.ships.size === 12) return;
   }
 
   function addHighlights(shipLength) {
@@ -175,6 +176,19 @@ function battleShipGame() {
     }
   }
 
+  function startGame() {
+    // Colocar los barcos del oponente
+    for (let i = 0; i < lengths.length; i++) {
+      placeRandomShip(lengths[i]);
+    }
+
+    console.log(computerPlayer.playerGameboard.gameboard);
+
+    // Renderizar los tableros para comenzar el juego
+    renderBoard(computerPlayer, handleHumanClick);
+    renderBoard(humanPlayer);
+  }
+
   const humanPlayer = new Player("Player", "human");
   const computerPlayer = new Player("Computer", "computer");
   const gameTurnText = document.querySelector(".game-turn");
@@ -182,24 +196,18 @@ function battleShipGame() {
   let gameTurn = humanPlayer;
   gameTurnText.textContent = `Place your ships: ${gameTurn.name}!`;
 
-  // Aca s eva a llamar la funcion para poner los barcos
-  // humanPlayer.playerGameboard.placeShip(2, [5, 1]);
-  // humanPlayer.playerGameboard.placeShip(3, [3, 7], false);
-  // humanPlayer.playerGameboard.placeShip(4, [1, 8], false);
-  // humanPlayer.playerGameboard.placeShip(2, [7, 2]);
+  renderBoard(computerPlayer);
   placeShips(humanPlayer, lengths[0]);
 
-  if (shipsPlaced) {
-    for (let i = 0; i < 4; i++) {
-      const randomLength = Math.floor(Math.random() * (4 - 2) + 2);
-      placeRandomShip(randomLength);
-    }
+  // for (let i = 0; i < 4; i++) {
+  //   const randomLength = Math.floor(Math.random() * (4 - 2) + 2);
+  //   placeRandomShip(randomLength);
+  // }
 
-    console.log(computerPlayer.playerGameboard.gameboard);
+  // console.log(computerPlayer.playerGameboard.gameboard);
 
-    renderBoard(humanPlayer);
-    renderBoard(computerPlayer, handleHumanClick);
-  }
+  // renderBoard(computerPlayer, handleHumanClick);
+  // renderBoard(humanPlayer);
 }
 
 battleShipGame();
