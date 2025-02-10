@@ -16,7 +16,7 @@ export default class Gameboard {
   }
 
   // Receive the coordinates, and then creates a ship, calling the clase shipClass
-  placeShip(length, coordinates, isHorizontal = true) {
+  placeShip(length, coordinates, isHorizontal) {
     let [row, col] = coordinates;
     // If the coordinates stick out from the board, return false
     if (
