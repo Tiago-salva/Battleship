@@ -13,7 +13,7 @@ export default function renderBoard(player, handleClick = null) {
       cellDiv.classList.add("cell");
       cellDiv.textContent = "";
 
-      if (player.type === "computer") {
+      if (player.type === "computer" && handleClick) {
         cellDiv.classList.add("cell-computer");
         cellDiv.addEventListener("click", () => handleClick(cellDiv, player));
       } else if (player.type === "human") {
@@ -25,7 +25,7 @@ export default function renderBoard(player, handleClick = null) {
         player.type === "human" &&
         player.playerGameboard.gameboard[rowIndex][colIndex] === 1
       ) {
-        cellDiv.style.border = "1px solid red";
+        cellDiv.classList.add("cell-with-ship");
       }
 
       if (player.playerGameboard.gameboard[rowIndex][colIndex] === "O") {
