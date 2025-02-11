@@ -9,7 +9,6 @@ function battleShipGame() {
   const rotateShipBtn = document.querySelector(".rotate-ship-btn");
   rotateShipBtn.addEventListener("click", () => {
     isHorizontal = !isHorizontal;
-    console.log(isHorizontal);
   });
 
   function handlePlaceShips(cell, player) {
@@ -26,12 +25,12 @@ function battleShipGame() {
       return false;
     }
 
-    console.log(player.playerGameboard.gameboard);
     count++;
     placeShips(player, lengths[count]);
 
     if (count === 4) {
       console.log("Todos los barcos fueron ubicados");
+      console.log(player.playerGameboard.gameboard);
       startGame();
     }
   }
@@ -137,23 +136,52 @@ function battleShipGame() {
 
   function computerTurn() {
     const computerBoard = document.querySelector(".gameboard-computer");
-    let validAttack = computerPlayer.attack(humanPlayer);
+    const randomRow = Math.floor(
+      Math.random() * humanPlayer.playerGameboard.gameboard.length
+    );
+    const randomCol = Math.floor(
+      Math.random() * humanPlayer.playerGameboard.gameboard[0].length
+    );
 
-    while (validAttack === false) {
-      console.log("El ataque no es valido");
-      validAttack = computerPlayer.attack(humanPlayer);
+    let validAttack = computerPlayer.attack(humanPlayer, [
+      randomRow,
+      randomCol,
+    ]);
+
+    if (humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "X") {
+      console.log("le dio a un barco el ijueputa");
+      gameTurnText.textContent =
+        "The computer hit your ship! He's attacking again";
+      renderBoard(humanPlayer);
+      setTimeout(() => {
+        computerTurn();
+      }, 1500);
+    } else {
+      while (validAttack === false) {
+        console.log("El ataque no es valido");
+        const randomRow = Math.floor(
+          Math.random() * humanPlayer.playerGameboard.gameboard.length
+        );
+        const randomCol = Math.floor(
+          Math.random() * humanPlayer.playerGameboard.gameboard[0].length
+        );
+        validAttack = computerPlayer.attack(humanPlayer, [
+          randomRow,
+          randomCol,
+        ]);
+      }
+
+      renderBoard(humanPlayer);
+
+      if (checkWinner(computerPlayer, humanPlayer)) {
+        gameTurnText.textContent = "Oh no! The computer won";
+        return;
+      }
+
+      gameTurn = humanPlayer;
+      gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
+      computerBoard.style.pointerEvents = "auto";
     }
-
-    renderBoard(humanPlayer);
-
-    if (checkWinner(computerPlayer, humanPlayer)) {
-      gameTurnText.textContent = "Oh no! The computer won";
-      return;
-    }
-
-    gameTurn = humanPlayer;
-    gameTurnText.textContent = `It's your turn: ${gameTurn.name}`;
-    computerBoard.style.pointerEvents = "auto";
   }
 
   function resetGame() {
@@ -166,7 +194,7 @@ function battleShipGame() {
     battleShipGame();
   }
 
-  function placeRandomShip(length, isHorizontal = true) {
+  function placeRandomShip(length) {
     let placed = false;
 
     while (!placed) {
@@ -177,6 +205,8 @@ function battleShipGame() {
       const col = Math.floor(
         Math.random() * computerPlayer.playerGameboard.gameboard[0].length
       );
+
+      const isHorizontal = Math.random() < 0.5;
 
       // Intentar colocar el barco
       placed = computerPlayer.playerGameboard.placeShip(
@@ -207,18 +237,8 @@ function battleShipGame() {
   let gameTurn = humanPlayer;
   gameTurnText.textContent = `Place your ships: ${gameTurn.name}!`;
 
-  renderBoard(computerPlayer);
   placeShips(humanPlayer, lengths[0]);
-
-  // for (let i = 0; i < 4; i++) {
-  //   const randomLength = Math.floor(Math.random() * (4 - 2) + 2);
-  //   placeRandomShip(randomLength);
-  // }
-
-  // console.log(computerPlayer.playerGameboard.gameboard);
-
-  // renderBoard(computerPlayer, handleHumanClick);
-  // renderBoard(humanPlayer);
+  renderBoard(computerPlayer);
 }
 
 battleShipGame();
