@@ -7,23 +7,16 @@ export default class Player {
     this.playerGameboard = new Gameboard();
   }
 
-  attack(opponent, coordinates = null) {
+  attack(opponent, coordinates) {
     if (this.type === "computer") {
-      const randomRow = Math.floor(
-        Math.random() * opponent.playerGameboard.gameboard.length
-      );
-      const randomCol = Math.floor(
-        Math.random() * opponent.playerGameboard.gameboard[0].length
-      );
-
       if (
-        opponent.playerGameboard.gameboard[randomRow][randomCol] === "X" ||
-        opponent.playerGameboard.gameboard[randomRow][randomCol] === "O"
+        opponent.playerGameboard.gameboard[coordinates] === "X" ||
+        opponent.playerGameboard.gameboard[coordinates] === "O"
       ) {
         return false;
       }
 
-      return opponent.playerGameboard.receiveAttack([randomRow, randomCol]);
+      return opponent.playerGameboard.receiveAttack(coordinates);
     }
 
     return opponent.playerGameboard.receiveAttack(coordinates);
