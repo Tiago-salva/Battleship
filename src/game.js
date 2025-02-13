@@ -86,8 +86,6 @@ function battleShipGame() {
       });
   }
 
-  //
-
   function checkWinner(currentPlayer, opponent) {
     if (opponent.playerGameboard.allShipsSunk() === true) {
       winner = currentPlayer.name;
@@ -111,7 +109,11 @@ function battleShipGame() {
       opponent.playerGameboard.gameboard[row][col] === "X" ||
       opponent.playerGameboard.gameboard[row][col] === "#"
     ) {
-      gameTurnText.textContent = "You hit a ship! Attack again";
+      gameTurnText.textContent =
+        opponent.playerGameboard.gameboard[row][col] === "#"
+          ? "You sunk a ship, keep attacking!"
+          : "You hit a ship! Attack again";
+
       renderBoard(opponent, handleHumanClick);
       if (checkWinner(humanPlayer, opponent)) {
         gameTurnText.textContent = `You won: ${winner}!`;
@@ -143,15 +145,25 @@ function battleShipGame() {
       Math.random() * humanPlayer.playerGameboard.gameboard[0].length
     );
 
+    if (humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "X") {
+      console.log("Ya se habia atacado ese barco");
+      computerTurn();
+    }
+
     let validAttack = computerPlayer.attack(humanPlayer, [
       randomRow,
       randomCol,
     ]);
 
-    if (humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "X") {
-      console.log("le dio a un barco el ijueputa");
+    if (
+      humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "X" ||
+      humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "#"
+    ) {
       gameTurnText.textContent =
-        "The computer hit your ship! He's attacking again";
+        humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "#"
+          ? "The computer sunk one of your ships, he's attacking!"
+          : "The computer hit your ship! He's attacking again";
+
       renderBoard(humanPlayer);
       setTimeout(() => {
         computerTurn();
@@ -218,6 +230,13 @@ function battleShipGame() {
   }
 
   function startGame() {
+    const rotateShipBtn = document
+      .querySelector(".rotate-ship-btn")
+      .classList.add("btn-disabled");
+
+    const gameboardHuman = document.querySelector(".gameboard-human");
+    gameboardHuman.style.pointerEvents = "none";
+
     // Colocar los barcos del oponente
     for (let i = 0; i < lengths.length; i++) {
       placeRandomShip(lengths[i]);
