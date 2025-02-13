@@ -38,6 +38,23 @@ export default class Gameboard {
 
     const ship = new Ship(length);
 
+    // Check if the position of the ship it's already occuped
+    for (let i = 0; i < ship.length; i++) {
+      if (this.gameboard[row][col] === 1) {
+        return false;
+      }
+
+      if (isHorizontal) {
+        col++;
+      } else {
+        row++;
+      }
+    }
+
+    // Restart the variables
+    [row, col] = coordinates;
+
+    // Add every position of the ship
     for (let i = 0; i < ship.length; i++) {
       this.ships.set(`${row},${col}`, ship);
       this.gameboard[row][col] = 1;
@@ -69,9 +86,7 @@ export default class Gameboard {
       const hittedShip = this.getShipAtCoordinates(row, col);
       this.gameboard[row][col] = "X";
       hittedShip.hit();
-      // En un futuro agregar que las casillas se muestren distinto
       if (hittedShip.isSunk()) {
-        console.log(hittedShip.position);
         hittedShip.position.forEach((position) => {
           const [row, col] = position;
           this.gameboard[row][col] = "#";
