@@ -147,7 +147,7 @@ function battleShipGame() {
 
     if (humanPlayer.playerGameboard.gameboard[randomRow][randomCol] === "X") {
       console.log("Ya se habia atacado ese barco");
-      computerTurn();
+      return computerTurn();
     }
 
     let validAttack = computerPlayer.attack(humanPlayer, [
