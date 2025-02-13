@@ -9,6 +9,7 @@
     --blue: rgb(64, 126, 224);
     --red: rgb(231, 99, 99);
     --white: rgb(245, 245, 245);
+    --dark-white: rgb(231, 231, 231);
 }
 
 * {
@@ -52,8 +53,9 @@ body {
     cursor: pointer;
 }
 
-.rotate-ship-btn:hover {
-    background-color: var(--white-hover);
+.btn-disabled {
+    pointer-events: none;
+    background-color: var(--dark-white);
 }
 
 .gameboards-container {
@@ -80,7 +82,7 @@ body {
     border: 1px solid var(--light-blue);
 }
 
-.cell {
+.cell{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -118,4 +120,8 @@ body {
 
 .cell-highlight {
     background-color: var(--light-blue-hover);
+}
+
+.cell-with-ship {
+    border: 2px solid var(--light-blue-hover);
 }
