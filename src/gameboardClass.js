@@ -9,10 +9,36 @@ export default class Gameboard {
     this.ships = new Map();
   }
 
-  missedAttacks = [];
+  directions = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+  ];
 
   getShipAtCoordinates(row, col) {
     return this.ships.get(`${row},${col}`) || null;
+  }
+
+  blockAdjacentCells(row, col, boardSize) {
+    this.directions.forEach(([dx, dy]) => {
+      const newRow = row + dx;
+      const newCol = col + dy;
+      if (
+        newRow >= 0 &&
+        newRow < boardSize &&
+        newCol >= 0 &&
+        newCol < boardSize
+      ) {
+        if (this.gameboard[newRow][newCol] === 0) {
+          this.gameboard[newRow][newCol] = "/";
+        }
+      }
+    });
   }
 
   // Receive the coordinates, and then creates a ship, calling the clase shipClass
@@ -40,7 +66,7 @@ export default class Gameboard {
 
     // Check if the position of the ship it's already occuped
     for (let i = 0; i < ship.length; i++) {
-      if (this.gameboard[row][col] === 1) {
+      if (this.gameboard[row][col] === 1 || this.gameboard[row][col] === "/") {
         return false;
       }
 
@@ -59,6 +85,7 @@ export default class Gameboard {
       this.ships.set(`${row},${col}`, ship);
       this.gameboard[row][col] = 1;
       ship.position.push([row, col]);
+      this.blockAdjacentCells(row, col, 10);
 
       if (isHorizontal) {
         col++;
@@ -93,8 +120,10 @@ export default class Gameboard {
         });
       }
       return true;
-    } else if (this.gameboard[row][col] === 0) {
-      this.missedAttacks.push(coordinates);
+    } else if (
+      this.gameboard[row][col] === 0 ||
+      this.gameboard[row][col] === "/"
+    ) {
       this.gameboard[row][col] = "O";
       return;
     }
