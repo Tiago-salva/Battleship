@@ -24,7 +24,7 @@ function battleShipGame() {
       console.log("Posicion no valida");
       return false;
     }
-
+    console.log(player.playerGameboard.gameboard);
     count++;
     placeShips(player, lengths[count]);
 
